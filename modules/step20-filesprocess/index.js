@@ -143,7 +143,7 @@ module.exports = {
      * 模块测试
      */
     test: function () {
-        console.log("step10-prepare test!");
+        console.log("step20-filesprocess test!");
     },
     /**
      * 执行模块
