@@ -32,7 +32,7 @@ var fileCopy = function (basePath, srcPath, dstPath) {
     if (basePath == null) {
         basePath = "";
     }
-    runShell("cp " + basePath + srcPath + " " + basePath + dstPath);
+    runShell("cp -r " + basePath + srcPath + " " + basePath + dstPath);
 };
 
 module.exports = {
