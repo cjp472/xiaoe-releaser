@@ -50,57 +50,67 @@ var proccessVue = function () {
  * 处理js
  */
 var proccessJs = function () {
-    getFiles.getFilenames(basePath + "public", function (file) {
-        if (!utils.isEndWith(file, ".js")) {
-            //不是js的忽略
-            return false;
-        } else if (file.indexOf(".min.") > -1) {
-            //所有.min的js忽略
-            return false;
-        } else if (file.indexOf("/vue/") > -1) {
-            //所有vue下面的js忽略
-            return false;
-        }
-        return true;
-    }).then(function (files) {
-        var fileList = files.files;
-        for (var i = 0; i < fileList.length; i++) {
-            console.log("正在处理第" + (i+1) + "/" + fileList.length + "个js");
-
-            var item = fileList[i];
-            var code = fs.readFileSync(item, 'utf-8');
-            fs.writeFileSync(item, uglifyJS.minify(code).code)
-        }
-    });
+    var got = false;
+    var files = null;
+    while (!got) {
+        getFiles.getFilenames(basePath + "public", function (file) {
+            if (!utils.isEndWith(file, ".js")) {
+                //不是js的忽略
+                return false;
+            } else if (file.indexOf(".min.") > -1) {
+                //所有.min的js忽略
+                return false;
+            } else if (file.indexOf("/vue/") > -1) {
+                //所有vue下面的js忽略
+                return false;
+            }
+            return true;
+        }).then(function (result) {
+            got = true;
+            files = result;
+        });
+    }
+    var fileList = files.files;
+    for (var i = 0; i < fileList.length; i++) {
+        console.log("正在处理第" + (i + 1) + "/" + fileList.length + "个js");
+        var item = fileList[i];
+        var code = fs.readFileSync(item, 'utf-8');
+        fs.writeFileSync(item, uglifyJS.minify(code).code)
+    }
 };
 
 /**
  * 处理css压缩
  */
 var proccessCss = function () {
-    getFiles.getFilenames("/Users/vinceyu/projects/_公司项目集合/微信前端h5/XiaoeWechatH5/public", function (file) {
-        if (!utils.isEndWith(file, ".css")) {
-            //不是js的忽略
-            return false;
-        } else if (file.indexOf(".min.") > -1) {
-            //所有.min的js忽略
-            return false;
-        } else if (file.indexOf("/vue/") > -1) {
-            //所有vue下面的js忽略
-            return false;
-        }
-        return true;
-    }).then(function (files) {
-        var fileList = files.files;
-        for (var i = 0; i < fileList.length; i++) {
-            console.log("正在处理第" + (i+1) + "/" + fileList.length + "个css");
-
-            item = fileList[i];
-            var code = fs.readFileSync(item, 'utf-8');
-            var options = {};
-            fs.writeFileSync(item, new cleanCSS(options).minify(code).styles);
-        }
-    });
+    var got = false;
+    var files = null;
+    while (!got) {
+        getFiles.getFilenames("/Users/vinceyu/projects/_公司项目集合/微信前端h5/XiaoeWechatH5/public", function (file) {
+            if (!utils.isEndWith(file, ".css")) {
+                //不是js的忽略
+                return false;
+            } else if (file.indexOf(".min.") > -1) {
+                //所有.min的js忽略
+                return false;
+            } else if (file.indexOf("/vue/") > -1) {
+                //所有vue下面的js忽略
+                return false;
+            }
+            return true;
+        }).then(function (result) {
+            got = true;
+            files = result;
+        });
+    }
+    var fileList = files.files;
+    for (var i = 0; i < fileList.length; i++) {
+        console.log("正在处理第" + (i + 1) + "/" + fileList.length + "个css");
+        var item = fileList[i];
+        var code = fs.readFileSync(item, 'utf-8');
+        var options = {};
+        fs.writeFileSync(item, new cleanCSS(options).minify(code).styles);
+    }
 };
 
 /**
