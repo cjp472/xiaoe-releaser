@@ -29,10 +29,10 @@ var revertStatus = function () {
         //移除现网的，已经编译的public
         utils.runShell("rm -rf " + basePath + "public");
         //将备份的public恢复
-        utils.runShell("mv " + basePath + "public_bak " + basePath + "public");
+        utils.runShell("mv " + basePath + "public_raw " + basePath + "public");
     }
     //备份public目录
-    utils.fileCopy(basePath, "public", "public_bak");
+    utils.fileCopy(basePath, "public", "public_raw");
 };
 
 module.exports = {
