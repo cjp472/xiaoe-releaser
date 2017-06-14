@@ -65,6 +65,8 @@ var proccessJs = function () {
     }).then(function (files) {
         var fileList = files.files;
         for (var i = 0; i < fileList.length; i++) {
+            console.log("正在处理第" + i + "/" + fileList.length + "个js");
+
             var item = fileList[i];
             var code = fs.readFileSync(item, 'utf-8');
             fs.writeFileSync(item, uglifyJS.minify(code).code)
@@ -91,6 +93,8 @@ var proccessCss = function () {
     }).then(function (files) {
         var fileList = files.files;
         for (var i = 0; i < fileList.length; i++) {
+            console.log("正在处理第" + i + "/" + fileList.length + "个css");
+
             item = fileList[i];
             var code = fs.readFileSync(item, 'utf-8');
             var options = {};
