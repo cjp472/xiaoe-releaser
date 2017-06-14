@@ -17,6 +17,8 @@ var run = function (base_path) {
 
     //恢复初始化
     revertStatus();
+    //开始处理
+    proccessFiles();
 };
 
 /**
@@ -25,10 +27,21 @@ var run = function (base_path) {
 var revertStatus = function () {
     if (fs.existsSync(basePath + "public/ONLINE_VERSION_LOCK")) {
         //如果存在现网锁，说明是现网版本，先恢复到标准版本
-
+        //移除public
+        utils.runShell("rm -rf " + basePath + "public");
+        //将备份的public恢复
+        utils.runShell("mv " + basePath + "public_bak " + basePath + "public");
     }
+};
+
+/**
+ * 开始处理各文件
+ */
+var proccessFiles = function () {
     //备份public目录
-    utils.runShell("mv " + basePath + "public " + basePath + "public_bak")
+    utils.runShell("mv " + basePath + "public " + basePath + "public_bak");
+    //建立现网锁
+    utils.runShell("touch " + basePath + "public/ONLINE_VERSION_LOCK");
 };
 
 module.exports = {
