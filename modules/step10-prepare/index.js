@@ -5,7 +5,9 @@
  * 2、将要修改的文件拷贝到其他文件夹，备份，防止异常
  */
 var fs = require("fs");
+var getFiles = require('node-all-files');
 var uglifyJS = require("uglify-js");
+var cleanCSS = require('clean-css');
 
 var utils = require("../_libs/utils");
 
@@ -37,33 +39,84 @@ var revertStatus = function () {
 };
 
 /**
- * 开始处理各文件
+ * 处理vue
  */
-var proccessFiles = function () {
-    //编译vue文件
+var proccessVue = function () {
     var forVue = "alias cnpm='npm --registry=https://registry.npm.taobao.org --cache=$HOME/.npm/.cache/cnpm --disturl=https://npm.taobao.org/dist --userconfig=$HOME/.cnpmrc'";
     forVue = forVue + " && cd " + basePath;
     forVue = forVue + " && cnpm install";
     forVue = forVue + " && cnpm run dist";
     utils.runShell(forVue);
-    //开始处理js
+};
 
+/**
+ * 处理js
+ */
+var proccessJs = function () {
+    getFiles.getFilenames(basePath + "public", function (file) {
+        if (!utils.isEndWith(file, ".js")) {
+            //不是js的忽略
+            return false;
+        } else if (file.indexOf(".min.") > -1) {
+            //所有.min的js忽略
+            return false;
+        } else if (file.indexOf("/vue/") > -1) {
+            //所有vue下面的js忽略
+            return false;
+        }
+        return true;
+    }).then(function (files) {
+        var fileList = files.files;
+        for (var i = 0; i < fileList.length; i++) {
+            var item = fileList[i];
+            var code = fs.readFileSync(item, 'utf-8');
+            fs.writeFileSync(item, uglifyJS.minify(code).code)
+        }
+    });
+};
 
+/**
+ * 处理css压缩
+ */
+var proccessCss=function () {
+    getFiles.getFilenames("/Users/vinceyu/projects/_公司项目集合/微信前端h5/XiaoeWechatH5/public", function (file) {
+        if (!utils.isEndWith(file, ".css")) {
+            //不是js的忽略
+            return false;
+        } else if (file.indexOf(".min.") > -1) {
+            //所有.min的js忽略
+            return false;
+        } else if (file.indexOf("/vue/") > -1) {
+            //所有vue下面的js忽略
+            return false;
+        }
+        return true;
+    }).then(function (files) {
+        var fileList = files.files;
+        for (var i = 0; i < fileList.length; i++) {
+            item = fileList[i];
+            var code = fs.readFileSync(item, 'utf-8');
+            var options = {};
+            fs.writeFileSync(item, new cleanCSS(options).minify(code).styles);
+        }
+    });
+};
+
+/**
+ * 开始处理各文件
+ */
+var proccessFiles = function () {
     //备份public目录
     utils.fileCopy(basePath, "public", "public_bak");
-    //建立现网public目录
-    utils.runShell("mkdir " + basePath + "public");
+    //处理vue
+    proccessVue();
+    //处理js
+    proccessJs();
+    //处理css
+    proccessCss();
+
     //建立现网锁
     utils.runShell("touch " + basePath + "public/ONLINE_VERSION_LOCK");
-    //将入口文件拷贝到public
-    utils.fileCopy(basePath, "public_bak/index.php", "public/index.php");
-    //图片资源拷贝回来
-    utils.fileCopy(basePath, "public_bak/images", "public/images");
-    //直播原生php处理逻辑拷贝回来
-    utils.fileCopy(basePath, "public_bak/original_php_tasks", "public/original_php_tasks");
-    //拷贝favicon.ico回来
-    utils.fileCopy(basePath, "public_bak/favicon.ico", "public/favicon.ico");
-
 };
 
 module.exports = {

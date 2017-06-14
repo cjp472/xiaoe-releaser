@@ -21,6 +21,7 @@
   "homepage": "https://github.com/qianlipp/xiaoe-releaser#readme",
   "dependencies": {
     "child_process": "^1.0.2",
+    "clean-css": "^4.1.4",
     "fs": "^0.0.1-security",
     "node-all-files": "^1.2.0",
     "uglify-js": "^3.0.15"
