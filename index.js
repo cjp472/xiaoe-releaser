@@ -9,5 +9,7 @@ module.exports = {
         var path = "/Users/vinceyu/projects/_公司项目集合/微信前端h5/XiaoeWechatH5";
         prepare.run(path);
         filesprocess.run(path);
+
+        console.log("结束！！！");
     }
 };
