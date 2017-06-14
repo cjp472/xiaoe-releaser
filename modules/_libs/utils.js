@@ -14,12 +14,29 @@ var isEndWith = function (srcStr, dstStr) {
     }
     return (srcStr.indexOf(dstStr) + dstStr.length) == srcStr.length;
 };
-
+/**
+ * 执行shell命令
+ * @param shell
+ */
 var runShell = function (shell) {
     process.exec(shell);
 };
 
+/**
+ * 文件拷贝
+ * @param basePath
+ * @param srcPath
+ * @param dstPath
+ */
+var fileCopy = function (basePath, srcPath, dstPath) {
+    if (basePath == null) {
+        basePath = "";
+    }
+    runShell("cp " + basePath + srcPath + " " + basePath + dstPath);
+};
+
 module.exports = {
     isEndWith: isEndWith,
-    runShell: runShell
+    runShell: runShell,
+    fileCopy: fileCopy,
 };
