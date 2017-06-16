@@ -22,13 +22,17 @@ var run = function (base_path) {
     }
 
     //处理vue
+    console.log("开始处理vue编译");
     proccessVue();
     //处理js
+    console.log("开始处理js");
     proccessJs();
     //处理css
+    console.log("开始处理css");
     proccessCss();
 
     //处理现网版本置位问题
+    console.log("开始处理现网版本置位问题");
     proccessOnlineState();
 
     //建立现网锁
