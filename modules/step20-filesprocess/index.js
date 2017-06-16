@@ -23,16 +23,16 @@ var run = function (base_path) {
 
     //处理vue
     proccessVue();
-    // //处理js
-    // proccessJs();
-    // //处理css
-    // proccessCss();
-    //
-    // //处理现网版本置位问题
-    // proccessOnlineState();
-    //
-    // //建立现网锁
-    // utils.runShell("touch " + basePath + "public/ONLINE_VERSION_LOCK");
+    //处理js
+    proccessJs();
+    //处理css
+    proccessCss();
+
+    //处理现网版本置位问题
+    proccessOnlineState();
+
+    //建立现网锁
+    utils.runShell("touch " + basePath + "public/ONLINE_VERSION_LOCK");
 };
 
 /**
@@ -72,8 +72,9 @@ var proccessJs = function () {
     }
     var fileList = files.files;
     for (var i = 0; i < fileList.length; i++) {
-        console.log("正在处理第" + (i + 1) + "/" + fileList.length + "个js");
         var item = fileList[i];
+        console.log("正在处理第" + (i + 1) + "/" + fileList.length + "个js:");
+        console.log(item);
         var code = fs.readFileSync(item, 'utf-8');
         fs.writeFileSync(item, uglifyJS.minify(code).code)
     }
