@@ -19,7 +19,7 @@ var isEndWith = function (srcStr, dstStr) {
  * @param shell
  */
 var runShell = function (shell) {
-    process.exec(shell);
+    process.execSync(shell, {stdio: [0, 1, 2]});
 };
 
 /**

@@ -17,7 +17,7 @@ var run = function (base_path) {
     }
 
     //恢复初始化
-    revertStatus();
+    // revertStatus();
 };
 
 /**

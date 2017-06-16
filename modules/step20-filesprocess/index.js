@@ -23,26 +23,26 @@ var run = function (base_path) {
 
     //处理vue
     proccessVue();
-    //处理js
-    proccessJs();
-    //处理css
-    proccessCss();
-
-    //处理现网版本置位问题
-    proccessOnlineState();
-
-    //建立现网锁
-    utils.runShell("touch " + basePath + "public/ONLINE_VERSION_LOCK");
+    // //处理js
+    // proccessJs();
+    // //处理css
+    // proccessCss();
+    //
+    // //处理现网版本置位问题
+    // proccessOnlineState();
+    //
+    // //建立现网锁
+    // utils.runShell("touch " + basePath + "public/ONLINE_VERSION_LOCK");
 };
 
 /**
  * 处理vue
  */
 var proccessVue = function () {
-    var forVue = "alias cnpm='npm --registry=https://registry.npm.taobao.org --cache=$HOME/.npm/.cache/cnpm --disturl=https://npm.taobao.org/dist --userconfig=$HOME/.cnpmrc'";
-    forVue = forVue + " && cd " + basePath;
-    forVue = forVue + " && cnpm install";
-    forVue = forVue + " && cnpm run dist";
+    var forVue = "alias cnpm='npm --registry=https://registry.npm.taobao.org --cache=$HOME/.npm/.cache/cnpm --disturl=https://npm.taobao.org/dist --userconfig=$HOME/.cnpmrc';";
+    forVue = forVue + "cd " + basePath+";";
+    forVue = forVue + "cnpm install;";
+    forVue = forVue + "cnpm run dist;";
     utils.runShell(forVue);
 };
 
