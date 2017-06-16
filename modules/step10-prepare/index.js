@@ -17,7 +17,7 @@ var run = function (base_path) {
     }
 
     //恢复初始化
-    // revertStatus();
+    revertStatus();
 };
 
 /**
@@ -25,6 +25,7 @@ var run = function (base_path) {
  */
 var revertStatus = function () {
     if (fs.existsSync(basePath + "public/ONLINE_VERSION_LOCK")) {
+        console.log("存在现网锁，删除现网的public，然后将备份的public替换到public");
         //如果存在现网锁，说明是现网版本，先恢复到标准版本
         //移除现网的，已经编译的public
         utils.runShell("rm -rf " + basePath + "public");
@@ -32,6 +33,7 @@ var revertStatus = function () {
         utils.runShell("mv " + basePath + "public_raw " + basePath + "public");
     }
     //备份public目录
+    console.log("备份一下public目录");
     utils.fileCopy(basePath, "public", "public_raw");
 };
 

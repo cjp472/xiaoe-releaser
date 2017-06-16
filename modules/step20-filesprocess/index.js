@@ -36,6 +36,7 @@ var run = function (base_path) {
     proccessOnlineState();
 
     //建立现网锁
+    console.log("建立现网锁");
     utils.runShell("touch " + basePath + "public/ONLINE_VERSION_LOCK");
 };
 
