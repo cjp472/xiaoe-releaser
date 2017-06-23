@@ -35,6 +35,8 @@ var fileCopy = function (basePath, srcPath, dstPath) {
     runShell("cp -r " + basePath + srcPath + " " + basePath + dstPath);
 };
 
+
+
 module.exports = {
     isEndWith: isEndWith,
     runShell: runShell,

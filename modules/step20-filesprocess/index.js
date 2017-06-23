@@ -8,6 +8,8 @@ var fs = require("fs");
 
 var getFiles = require('node-all-files');
 
+var filesWalker = require('files-walker');
+
 var uglifyJS = require("uglify-js");
 var cleanCSS = require('clean-css');
 
@@ -45,7 +47,7 @@ var run = function (base_path) {
  */
 var proccessVue = function () {
     var forVue = "alias cnpm='npm --registry=https://registry.npm.taobao.org --cache=$HOME/.npm/.cache/cnpm --disturl=https://npm.taobao.org/dist --userconfig=$HOME/.cnpmrc';";
-    forVue = forVue + "cd " + basePath+";";
+    forVue = forVue + "cd " + basePath + ";";
     forVue = forVue + "cnpm install;";
     forVue = forVue + "cnpm run dist;";
     utils.runShell(forVue);
@@ -54,69 +56,64 @@ var proccessVue = function () {
 /**
  * 处理js
  */
+
+
+    // {
+    //      contain:"",
+    //      not_contain:"",
+    //      start_with:"",
+    //      not_start_with:"",
+    //      end_with:"",
+    //      not_end_with:"",
+    //      filter:function(){
+    // }
+    // }
+
 var proccessJs = function () {
-    var got = false;
-    var files = null;
-    while (!got) {
-        getFiles.getFilenames(basePath + "public", function (file) {
-            if (!utils.isEndWith(file, ".js")) {
-                //不是js的忽略
-                return false;
-            } else if (file.indexOf(".min.") > -1) {
-                //所有.min的js忽略
-                return false;
-            } else if (file.indexOf("/vue/") > -1) {
-                //所有vue下面的js忽略
-                return false;
+        filesWalker.walkSync(basePath + "public", function (path, name) {
+            var code = fs.readFileSync(path + name, 'utf-8');
+            fs.writeFileSync(path + name, uglifyJS.minify(code).code)
+        }, {
+            filter: function (path, name) {
+                if (!utils.isEndWith(name, ".js")) {
+                    //不是js的忽略
+                    return false;
+                } else if (name.indexOf(".min.") > -1) {
+                    //所有.min的js忽略
+                    return false;
+                } else if (path.indexOf("/vue/") > -1) {
+                    //所有vue下面的js忽略
+                    return false;
+                }
+                return true;
             }
-            return true;
-        }).then(function (result) {
-            got = true;
-            files = result;
         });
-    }
-    var fileList = files.files;
-    for (var i = 0; i < fileList.length; i++) {
-        var item = fileList[i];
-        console.log("正在处理第" + (i + 1) + "/" + fileList.length + "个js:");
-        console.log(item);
-        var code = fs.readFileSync(item, 'utf-8');
-        fs.writeFileSync(item, uglifyJS.minify(code).code)
-    }
-};
+    };
 
 /**
  * 处理css压缩
  */
 var proccessCss = function () {
-    var got = false;
-    var files = null;
-    while (!got) {
-        getFiles.getFilenames("/Users/vinceyu/projects/_公司项目集合/微信前端h5/XiaoeWechatH5/public", function (file) {
-            if (!utils.isEndWith(file, ".css")) {
+
+    filesWalker.walkSync(basePath + "public", function (path, name) {
+        var code = fs.readFileSync(path + name, 'utf-8');
+        var options = {};
+        fs.writeFileSync(path + name, new cleanCSS(options).minify(code).styles);
+    }, {
+        filter: function (path, name) {
+            if (!utils.isEndWith(name, ".css")) {
                 //不是js的忽略
                 return false;
-            } else if (file.indexOf(".min.") > -1) {
+            } else if (name.indexOf(".min.") > -1) {
                 //所有.min的js忽略
                 return false;
-            } else if (file.indexOf("/vue/") > -1) {
+            } else if (path.indexOf("/vue/") > -1) {
                 //所有vue下面的js忽略
                 return false;
             }
             return true;
-        }).then(function (result) {
-            got = true;
-            files = result;
-        });
-    }
-    var fileList = files.files;
-    for (var i = 0; i < fileList.length; i++) {
-        console.log("正在处理第" + (i + 1) + "/" + fileList.length + "个css");
-        var item = fileList[i];
-        var code = fs.readFileSync(item, 'utf-8');
-        var options = {};
-        fs.writeFileSync(item, new cleanCSS(options).minify(code).styles);
-    }
+        }
+    });
 };
 
 /**
