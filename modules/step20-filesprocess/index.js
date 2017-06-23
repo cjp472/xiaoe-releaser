@@ -15,15 +15,17 @@ var utils = require("../_libs/utils");
 
 var basePath = null;
 
-var run = function (base_path) {
+var run = function (base_path, needDoVue) {
     basePath = base_path;
     if (!utils.isEndWith(basePath, "/")) {
         basePath = basePath + "/";
     }
 
-    // //处理vue
-    // console.log("开始处理vue编译");
-    // proccessVue();
+    //处理vue
+    if (needDoVue) {
+        console.log("开始处理vue编译");
+        proccessVue();
+    }
     //处理js
     console.log("开始处理js");
     proccessJs();
