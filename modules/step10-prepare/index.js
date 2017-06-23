@@ -35,6 +35,9 @@ var revertStatus = function () {
     //备份public目录
     console.log("备份一下public目录");
     utils.fileCopy(basePath, "public", "public_raw");
+
+    //添加到svn
+    utils.runShell("svn add " + basePath + "public_raw");
 };
 
 module.exports = {
