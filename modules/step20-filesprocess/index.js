@@ -23,9 +23,9 @@ var run = function (base_path) {
         basePath = basePath + "/";
     }
 
-    //处理vue
-    console.log("开始处理vue编译");
-    proccessVue();
+    // //处理vue
+    // console.log("开始处理vue编译");
+    // proccessVue();
     //处理js
     console.log("开始处理js");
     proccessJs();
@@ -56,47 +56,40 @@ var proccessVue = function () {
 /**
  * 处理js
  */
-
-
-    // {
-    //      contain:"",
-    //      not_contain:"",
-    //      start_with:"",
-    //      not_start_with:"",
-    //      end_with:"",
-    //      not_end_with:"",
-    //      filter:function(){
-    // }
-    // }
-
 var proccessJs = function () {
-        filesWalker.walkSync(basePath + "public", function (path, name) {
-            var code = fs.readFileSync(path + name, 'utf-8');
-            fs.writeFileSync(path + name, uglifyJS.minify(code).code)
-        }, {
-            filter: function (path, name) {
-                if (!utils.isEndWith(name, ".js")) {
-                    //不是js的忽略
-                    return false;
-                } else if (name.indexOf(".min.") > -1) {
-                    //所有.min的js忽略
-                    return false;
-                } else if (path.indexOf("/vue/") > -1) {
-                    //所有vue下面的js忽略
-                    return false;
-                }
-                return true;
+    var jsCounter = 0;
+    filesWalker.walkSync(basePath + "public", function (path, name) {
+        console.log("正在处理第:" + (++jsCounter) + "个js:" + path + "/" + name);
+        var code = fs.readFileSync(path + "/" + name, 'utf-8');
+        fs.writeFileSync(path + name, uglifyJS.minify(code).code)
+    }, {
+        filter: function (path, name) {
+            if (!utils.isEndWith(name, ".js")) {
+                //不是js的忽略
+                return false;
+            } else if (name.indexOf(".min.") > -1) {
+                //所有.min的js忽略
+                return false;
+            } else if (path.indexOf("/vue/") > -1) {
+                //所有vue下面的js忽略
+                return false;
+            } else if (path.indexOf("show_pdf") > -1) {
+                //所有show_pdf库的文件不混淆
+                return false;
             }
-        });
-    };
+            return true;
+        }
+    });
+};
 
 /**
  * 处理css压缩
  */
 var proccessCss = function () {
-
+    var cssCounter = 0;
     filesWalker.walkSync(basePath + "public", function (path, name) {
-        var code = fs.readFileSync(path + name, 'utf-8');
+        console.log("正在处理第:" + (++cssCounter) + "个css:" + path + "/" + name);
+        var code = fs.readFileSync(path + "/" + name, 'utf-8');
         var options = {};
         fs.writeFileSync(path + name, new cleanCSS(options).minify(code).styles);
     }, {
