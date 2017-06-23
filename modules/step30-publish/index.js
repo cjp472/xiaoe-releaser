@@ -32,7 +32,7 @@ var proccessOnlineState = function () {
     //配置文件
     var file = basePath + "app/Http/Controllers/Tools/EnvSetting.php";
     var code = fs.readFileSync(file, 'utf-8');
-    code = code.replace(/\.env/, ".env.production");
+    code = code.replace(/'\.env'/, "'.env.production'");
     fs.writeFileSync(file, code);
     //直播推流数据库环境
     file = basePath + "public/original_php_tasks/alive_video/AliveLogic.php";
