@@ -59,9 +59,10 @@ var proccessVue = function () {
 var proccessJs = function () {
     var jsCounter = 0;
     filesWalker.walkSync(basePath + "public", function (path, name) {
-        console.log("正在处理第:" + (++jsCounter) + "个js:" + path + "/" + name);
-        var code = fs.readFileSync(path + "/" + name, 'utf-8');
-        fs.writeFileSync(path + name, uglifyJS.minify(code).code)
+        var jsFile = path + "/" + name;
+        console.log("正在处理第:" + (++jsCounter) + "个js:" + jsFile);
+        var code = fs.readFileSync(jsFile, 'utf-8');
+        fs.writeFileSync(jsFile, uglifyJS.minify(code).code)
     }, {
         filter: function (path, name) {
             if (!utils.isEndWith(name, ".js")) {
@@ -88,10 +89,11 @@ var proccessJs = function () {
 var proccessCss = function () {
     var cssCounter = 0;
     filesWalker.walkSync(basePath + "public", function (path, name) {
-        console.log("正在处理第:" + (++cssCounter) + "个css:" + path + "/" + name);
-        var code = fs.readFileSync(path + "/" + name, 'utf-8');
+        var cssFile = path + "/" + name;
+        console.log("正在处理第:" + (++cssCounter) + "个css:" + cssFile);
+        var code = fs.readFileSync(cssFile, 'utf-8');
         var options = {};
-        fs.writeFileSync(path + name, new cleanCSS(options).minify(code).styles);
+        fs.writeFileSync(cssFile, new cleanCSS(options).minify(code).styles);
     }, {
         filter: function (path, name) {
             if (!utils.isEndWith(name, ".css")) {
