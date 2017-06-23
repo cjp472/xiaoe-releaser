@@ -6,8 +6,6 @@
  */
 var fs = require("fs");
 
-var getFiles = require('node-all-files');
-
 var filesWalker = require('files-walker');
 
 var uglifyJS = require("uglify-js");
